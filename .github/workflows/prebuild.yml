@@ -107,7 +107,7 @@ jobs:
           LOX_LIBRESPOT_SKIP_BUILD: "1"
         run: npm ci
       - name: Compile JS/types
-        run: npm run build:types:clean
+        run: npm run build:types
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -127,6 +127,10 @@ jobs:
           done
       - name: List prebuilds
         run: find prebuilds -maxdepth 3 -type f
+      - name: Verify pack contains prebuilds
+        run: |
+          npm pack
+          tar -tf node-librespot-*.tgz | grep prebuilds
       - name: Publish package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
