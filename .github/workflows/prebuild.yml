@@ -29,6 +29,8 @@ jobs:
           LOX_LIBRESPOT_SKIP_BUILD: "1"
         run: npm ci
       - name: Build addon
+        env:
+          RUSTFLAGS: ${{ runner.os == 'macOS' && '-C link-arg=-Wl,-undefined,dynamic_lookup' || '' }}
         run: npm run build
 
   prebuild:
@@ -58,6 +60,9 @@ jobs:
       - name: Install cross toolchain
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu pkg-config
+      - name: Install zig (for cross-linking)
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: sudo apt-get install -y zig
       - name: Install dependencies
         env:
           LOX_LIBRESPOT_SKIP_BUILD: "1"
@@ -65,7 +70,16 @@ jobs:
       - name: Build prebuilt binary
         env:
           RUST_TARGET: ${{ matrix.target }}
-        run: npm run build:prebuild
+          RUSTFLAGS: ${{ startsWith(matrix.target, 'aarch64-apple-darwin') && '-C link-arg=-Wl,-undefined,dynamic_lookup' || '' }}
+          USE_ZIG: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && '1' || '' }}
+        run: |
+          if [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
+            export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+            export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+            export AR_aarch64_unknown_linux_gnu=aarch64-linux-gnu-ar
+            export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+          fi
+          npm run build:prebuild
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:

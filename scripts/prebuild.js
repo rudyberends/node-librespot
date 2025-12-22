@@ -11,6 +11,9 @@ const run = (cmd, env = {}) =>
 run('npm run clean');
 
 const args = ['napi', 'build', '--release', '--platform', '--strip'];
+if (process.env.USE_ZIG === '1') {
+  args.push('--zig');
+}
 if (process.env.RUST_TARGET) {
   args.push('--target', process.env.RUST_TARGET);
 }
