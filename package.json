@@ -1,6 +1,6 @@
 {
   "name": "node-librespot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node.js bindings for librespot (Spotify Connect) via N-API with prebuild support.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,6 +8,7 @@
     "dist/**/*",
     "prebuilds/**/*",
     "index.d.ts",
+    "scripts/**/*",
     "src/**/*",
     "native/**/*",
     "Cargo.toml",
@@ -22,7 +23,7 @@
     "build:types": "tsc -p tsconfig.build.json && rm -f index.d.ts",
     "build:types:clean": "rm -rf dist && npm run build:types",
     "clean": "rm -rf build dist prebuilds *.log *.node target index.d.ts",
-    "prepublishOnly": "npm run build:types:clean",
+    "prepublishOnly": "npm run build:types",
     "postinstall": "node scripts/postinstall.js"
   },
   "keywords": [
