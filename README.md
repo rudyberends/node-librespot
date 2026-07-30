@@ -2,7 +2,7 @@
 
 Native Node.js bindings for [librespot](https://github.com/librespot-org/librespot) (Spotify Connect) using N-API. Streams PCM directly to JavaScript without spawning the librespot binary.
 
-Used by [lox-audioserver](https://github.com/rudyberends/lox-audioserver) to handle spotify traffic, but can be used by other software.
+Used by [sonn core](https://github.com/sonn-audio/core) to handle spotify traffic, but can be used by other software.
 
 ## Features
 - Stream a Spotify track/episode to PCM buffers (`streamTrack`) using a Web API **access token**.
